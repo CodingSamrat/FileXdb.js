@@ -4,6 +4,19 @@
 ``` bash
 npm install filexdb
 ```
+## Usage
+``` javascript
+import FileXdb from 'filexdb'
+
+// Initiate database
+const db = new FileXdb('filexdb/data/filex.db')
+
+// Create collection
+const User = await db.collection('user')
+
+// Start using database
+const user = await User.insertOne({ name: "Sam", email: 'sam@codingsamrat.com' })
+```
 
 ## Methods
 
