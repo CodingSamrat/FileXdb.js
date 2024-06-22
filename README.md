@@ -31,7 +31,10 @@ await Collection.updateMany(query, payload)
 await Collection.findByIdAndUpdate(_if, payload, option)
 
 await Collection.export()
-await Collection.import(fileName)
+
+await Collection.count()
+await Collection.drop()
+await Collection.rename()
 ```
 
 
