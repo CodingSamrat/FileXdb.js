@@ -1,0 +1,29 @@
+{
+  "name": "filexdb",
+  "version": "0.0.1",
+  "description": "A lightweight local NoSQL database",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodingSamrat/FileXdb.py.git"
+  },
+  "keywords": [
+    "nosql",
+    "data-storage",
+    "nosql-database",
+    "database"
+  ],
+  "author": "Sam (Coding Samrat)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodingSamrat/FileXdb.py/issues"
+  },
+  "homepage": "https://github.com/CodingSamrat/FileXdb.py#readme",
+  "dependencies": {
+    "bson": "^6.7.0"
+  }
+}
