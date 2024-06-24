@@ -543,10 +543,8 @@ export default class Collection {
                 await this.#_handler.write(await this.#_database)
 
                 if (option?.new) {
-                    console.log('new')
                     return newDocument
                 } else {
-                    console.log('old')
                     return document
                 }
             }
