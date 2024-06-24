@@ -126,6 +126,56 @@ export default class Collection {
      * @param {Map} document 
      * @returns document
      */
+    async create(document) {
+        let _document = {}
+        // Early return if no query
+        if (!document) {
+            throw new Error('Query cann\'t be null')
+        }
+
+
+        // Ensure the document is an object
+        if (typeof document !== 'object' || Array.isArray(document)) {
+            throw new Error('Invalid Document')
+        }
+
+        // console.log(document.hasOwnProperty("_id"))
+        // Check if the document has key "_id"
+        if (document.hasOwnProperty("_id")) {
+
+            // Check if the document already exists
+            if (await this.#_docExists(document._id)) {
+                throw new Error(`A document with id \`${document._id}\` is already exists`)
+            }
+
+            _document = document
+        } else {
+
+            _document = {
+                _id: new ObjectId(),
+                ...document
+            }
+        }
+
+        // Push document to the database
+        const _col = await this.#_collection
+        _col.push(_document)
+        this.#_database[this.#_colName] = _col // Update database
+
+
+        // Write to the database
+        await this.#_handler.write(await this.#_database)
+
+
+        return _document
+    }
+
+
+    /**
+     * Insert a single document to the collection
+     * @param {Map} document 
+     * @returns document
+     */
     async insertOne(document) {
         let _document = {}
         // Early return if no query

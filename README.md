@@ -32,6 +32,7 @@ await Collection.find(query, option)
 await Collection.findOne(query)
 await Collection.findById(_id)
 
+await Collection.create(document)
 await Collection.insertOne(document)
 await Collection.insertMany(documents)
 
