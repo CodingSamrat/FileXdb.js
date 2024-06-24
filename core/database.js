@@ -29,7 +29,7 @@ export default class Database {
     /**
      * Create new collection 
      * @param {String} colName 
-     * @returns Collection
+     * @returns {Collection} Collection
      */
     async collection(colName) {
         colName = colName.toLowerCase()

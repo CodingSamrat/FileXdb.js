@@ -34,6 +34,7 @@ export default class Collection {
      * @returns {Map} collections
      */
     async find(query = null, option = {}) {
+        this.#_database = await this.#_getDatabase()
         let limit = option?.limit
         let result = []
 
@@ -82,6 +83,7 @@ export default class Collection {
      * @returns document
      */
     async findOne(query) {
+        this.#_database = await this.#_getDatabase()
         let result = {}
         // Early return if no query
         if (!query) {
@@ -112,6 +114,7 @@ export default class Collection {
      * @returns 
      */
     async findById(_id) {
+        this.#_database = await this.#_getDatabase()
         for (const doc of await this.#_collection) {
             if (doc._id.toString() === _id.toString()) {
                 return doc
@@ -127,6 +130,7 @@ export default class Collection {
      * @returns document
      */
     async create(document) {
+        this.#_database = await this.#_getDatabase()
         let _document = {}
         // Early return if no query
         if (!document) {
@@ -164,7 +168,7 @@ export default class Collection {
 
 
         // Write to the database
-        await this.#_handler.write(await this.#_database)
+        await this.#_handler.write(this.#_database)
 
 
         return _document
@@ -177,6 +181,7 @@ export default class Collection {
      * @returns document
      */
     async insertOne(document) {
+        this.#_database = await this.#_getDatabase()
         let _document = {}
         // Early return if no query
         if (!document) {
@@ -214,7 +219,7 @@ export default class Collection {
 
 
         // Write to the database
-        await this.#_handler.write(await this.#_database)
+        await this.#_handler.write(this.#_database)
 
 
         return _document
@@ -229,6 +234,7 @@ export default class Collection {
      * @returns 
      */
     async insertMany(documents) {
+        this.#_database = await this.#_getDatabase()
         const _col = await this.#_collection
         let docIds = []
 
@@ -273,7 +279,7 @@ export default class Collection {
 
         // Write to the database
         this.#_database[this.#_colName] = _col // Update database
-        await this.#_handler.write(await this.#_database)
+        await this.#_handler.write(this.#_database)
 
 
         return docIds
@@ -287,7 +293,7 @@ export default class Collection {
      * @returns document id
      */
     async deleteOne(query) {
-
+        this.#_database = await this.#_getDatabase()
         // Early return if no query
         if (!query) {
             throw new Error('Query cann\'t be null')
@@ -312,7 +318,7 @@ export default class Collection {
                 this.#_updateCollection(coll)
 
                 // Write the database
-                await this.#_handler.write(await this.#_database)
+                await this.#_handler.write(this.#_database)
 
                 return document
             }
@@ -328,6 +334,7 @@ export default class Collection {
      * @returns list of ObjectIds
      */
     async deleteMany(query) {
+        this.#_database = await this.#_getDatabase()
         let deletedDocIds = []
         let coll = []
 
@@ -358,7 +365,7 @@ export default class Collection {
         }
 
         // Write the database
-        await this.#_handler.write(await this.#_database)
+        await this.#_handler.write(this.#_database)
 
         return deletedDocIds
     }
