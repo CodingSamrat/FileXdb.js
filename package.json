@@ -1,6 +1,6 @@
 {
   "name": "filexdb",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A lightweight local NoSQL database",
   "main": "index.js",
   "type": "module",
