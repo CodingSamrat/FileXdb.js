@@ -310,13 +310,12 @@ export default class Collection {
 
         for (let i = 0; i < (await this.#_collection).length; i++) {
             const document = (await this.#_collection)[i]
-
             if (this.#_matchesQuery(document, query)) {
-                coll.splice(i, 1)
+                await coll.splice(i, 1)
 
 
-                this.#_updateCollection(coll)
-
+                this.#_collection = coll
+                this.#_database[this.#_colName] = coll
                 // Write the database
                 await this.#_handler.write(this.#_database)
 
