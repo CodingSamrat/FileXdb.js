@@ -428,14 +428,12 @@ export default class Collection {
                 }
 
                 coll[i] = newDocument
-
-                await this.#_handler.write(await this.#_database)
+                this.#_database[this.#_colName] = coll
+                await this.#_handler.write(this.#_database)
 
                 if (option?.new) {
-                    console.log('new')
                     return newDocument
                 } else {
-                    console.log('old')
                     return document
                 }
             }
@@ -496,7 +494,8 @@ export default class Collection {
 
         }
 
-        await this.#_handler.write(await this.#_database)
+        this.#_database[this.#_colName] = coll
+        await this.#_handler.write(this.#_database)
         return docIds
     }
 
@@ -539,7 +538,8 @@ export default class Collection {
 
                 coll[i] = newDocument
 
-                await this.#_handler.write(await this.#_database)
+                this.#_database[this.#_colName] = coll
+                await this.#_handler.write(this.#_database)
 
                 if (option?.new) {
                     return newDocument
