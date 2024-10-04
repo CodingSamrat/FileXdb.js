@@ -7,7 +7,6 @@
 
 import Collection from './collection.js';
 import { Handler } from './fileIO.js';
-import { prettify } from '../helpers/plugins.js'
 const fxColName = '_fx'
 
 
@@ -66,3 +65,16 @@ export default class Database {
     }
 }
 
+
+
+// plugins ---------------
+function prettify() {
+    Object.defineProperty(Object.prototype, 'prettify', {
+        value: function () {
+            return JSON.stringify(this, null, 2);
+        },
+        writable: true,
+        configurable: true,
+        enumerable: false
+    });
+}
