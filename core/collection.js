@@ -34,45 +34,65 @@ export default class Collection {
      * @returns {Map} collections
      */
     async find(query = null, option = {}) {
-        this.#_database = await this.#_getDatabase()
-        let limit = option?.limit
-        let result = []
-
-
+        this.#_database = await this.#_getDatabase();
+        let limit = option?.limit;
+        let sort = option?.sort;
+        let result = [];
+    
         // Ensure the query is an object
         if (query && (typeof query !== 'object' || Array.isArray(query))) {
-            throw new Error('Invalid query')
+            throw new Error('Invalid query');
         }
-
+    
         // Ensure the limit is an Array
         if (limit && (!Array.isArray(limit) || limit.length !== 2)) {
-            throw new Error('Invalid limit parameter')
+            throw new Error('Invalid limit parameter');
         }
-
-        let [limitStart, limitEnd] = [0, 0]
+    
+        let [limitStart, limitEnd] = [0, 0];
         if (limit) {
-            [limitStart, limitEnd] = limit
-
+            [limitStart, limitEnd] = limit;
+    
             if (limitStart > limitEnd) {
-                throw new Error("limit[0] must be less than limit[1]")
+                throw new Error("limit[0] must be less than limit[1]");
             }
         }
-
-
+    
+        // Fetch documents
         if (!query) {
-            result = limit ? this.#_collection.slice(limitStart, limitEnd) : this.#_collection
+            result = this.#_collection;
         } else {
             for (const doc of await this.#_collection) {
                 if (this.#_matchesQuery(doc, query)) {
-                    result.push(doc)
-
-                    if (limit && result.length >= limitEnd) {
-                        break
-                    }
+                    result.push(doc);
                 }
             }
         }
-        return result
+    
+        // Apply sorting if needed
+        if (sort && typeof sort.field === 'string' && ['asc', 'desc'].includes(sort.order)) {
+            result.sort((a, b) => {
+                const fieldA = a[sort.field];
+                const fieldB = b[sort.field];
+    
+                if (fieldA === undefined || fieldB === undefined) {
+                    throw new Error(`Field ${sort.field} does not exist in the documents`);
+                }
+    
+                if (sort.order === 'asc') {
+                    return fieldA > fieldB ? 1 : fieldA < fieldB ? -1 : 0;
+                } else {
+                    return fieldA < fieldB ? 1 : fieldA > fieldB ? -1 : 0;
+                }
+            });
+        }
+    
+        // Apply limit if specified
+        if (limit) {
+            result = result.slice(limitStart, limitEnd);
+        }
+    
+        return result;
     }
 
 
