@@ -353,40 +353,36 @@ export default class Collection {
      * @returns list of ObjectIds
      */
     async deleteMany(query) {
-        this.#_database = await this.#_getDatabase()
-        let deletedDocIds = []
-        let coll = []
-
-
+        this.#_database = await this.#_getDatabase();
+        let deletedDocIds = [];
+        let coll = await this.#_collection;
+    
         if (query) {
-            // Ensure the query is an object
-            if (query && (typeof query !== 'object' || Array.isArray(query))) {
-                throw new Error('Invalid query')
+            if (typeof query !== 'object' || Array.isArray(query)) {
+                throw new Error('Invalid query');
             }
 
-
-            for (let i = 0; i < (await this.#_collection).length; i++) {
-                const document = (await this.#_collection)[i]
-
+            const newColl = coll.filter(document => {
                 if (this.#_matchesQuery(document, query)) {
-                    deletedDocIds.push(document._id)
-                    continue
-                } else {
-                    coll.push(document)
+                    deletedDocIds.push(document._id);
+                    return false; 
                 }
-            }
+                return true;
+            });
 
-            this.#_updateCollection(coll)
-
+            this.#_collection = newColl;
+            this.#_database[this.#_colName] = newColl;
         } else {
-            deletedDocIds = (await this.#_collection).map(obj => obj._id);
-            this.#_updateCollection([])
+            deletedDocIds = coll.map(doc => doc._id);
+            this.#_collection = [];
+            
+            // Update the database
+            this.#_database[this.#_colName] = [];
         }
 
-        // Write the database
-        await this.#_handler.write(this.#_database)
-
-        return deletedDocIds
+        await this.#_handler.write(this.#_database);
+    
+        return deletedDocIds;
     }
 
 
